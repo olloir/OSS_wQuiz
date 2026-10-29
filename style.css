@@ -152,7 +152,6 @@ a { color: inherit; text-decoration: none; }
 .word-prompt { margin: 0; color: #858f82; font-size: 11px; }
 .question-word-area h2 { margin: 10px 0 3px; color: var(--ink); font-size: 43px; font-weight: 800; letter-spacing: -1.8px; }
 .pronunciation { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; color: #929b8e; font-size: 12px; }
-.audio-hint { width: 26px; height: 26px; display: grid; place-items: center; border-radius: 50%; color: var(--forest); background: #edf3eb; font-size: 15px; }
 .answer-options { display: grid; gap: 9px; }
 .answer-option { min-height: 49px; display: flex; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; color: #525c4f; background: white; font-size: 12px; }
 .option-letter { width: 25px; height: 25px; display: grid; place-items: center; flex: none; border-radius: 7px; color: #849080; background: #f2f5f0; font-size: 10px; font-weight: 700; }
