@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7faf6">
+    <title>단어 퀴즈 — wQuiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="./main.html" aria-label="wQuiz 홈"><span class="brand-mark">w</span><span>wQuiz</span></a>
+        <nav class="top-nav" aria-label="주 메뉴">
+            <a class="nav-link" href="./main.html">학습 홈</a>
+            <a class="nav-link active" href="./quiz.html" aria-current="page">단어 퀴즈</a>
+        </nav>
+        <div class="top-actions">
+            <a class="quiz-home-link" href="./main.html"><span aria-hidden="true">←</span> 홈으로</a>
+            <div class="avatar" aria-label="내 프로필">W</div>
+        </div>
+    </header>
+
+    <main class="quiz-shell">
+        <div class="quiz-topline">
+            <div class="quiz-heading">
+                <p class="eyebrow">DAILY WORD CHALLENGE</p>
+                <h1>오늘의 단어 퀴즈</h1>
+            </div>
+            <div class="quiz-count"><span>01</span><i>/</i>10</div>
+        </div>
+        <div class="quiz-progress" aria-label="전체 10문제 중 1번째 문제"><span></span></div>
+
+        <section class="question-card" aria-labelledby="question-word">
+            <div class="question-card-top">
+                <span class="question-badge"><span class="category-dot"></span> 오늘의 단어</span>
+                <span class="question-type">뜻을 골라주세요</span>
+            </div>
+
+            <div class="question-word-area">
+                <p class="word-prompt">다음 영어 단어의 뜻은 무엇일까요?</p>
+                <h2 id="question-word">curious</h2>
+                <p class="pronunciation">/ˈkjʊriəs/ <span class="audio-hint" aria-label="발음 듣기 기능 준비 중">♫</span></p>
+            </div>
+
+            <div class="answer-options" aria-label="정답 선택지">
+                <div class="answer-option"><span class="option-letter">A</span><span>주의 깊은</span></div>
+                <div class="answer-option"><span class="option-letter">B</span><span>호기심이 많은</span></div>
+                <div class="answer-option"><span class="option-letter">C</span><span>자신감 있는</span></div>
+                <div class="answer-option"><span class="option-letter">D</span><span>참을성이 있는</span></div>
+            </div>
+
+            <div class="question-card-bottom">
+                <span class="answer-note"><span aria-hidden="true">✦</span> 아는 만큼 차근차근 골라보세요</span>
+                <button class="button button-primary" type="button" disabled>정답 확인 <span>→</span></button>
+            </div>
+        </section>
+
+        <div class="quiz-encouragement"><span aria-hidden="true">✿</span> 천천히 생각해도 괜찮아요. 매일의 작은 도전이 실력이 돼요!</div>
+    </main>
+</body>
+</html>

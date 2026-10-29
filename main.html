@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7f8fc">
+    <title>wQuiz — 오늘의 영어 단어</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="./main.html" aria-label="wQuiz 홈"><span class="brand-mark">w</span><span>wQuiz</span></a>
+        <nav class="top-nav" aria-label="주 메뉴"><a class="nav-link active" href="./main.html">학습 홈</a><a class="nav-link" href="./quiz.html">단어 퀴즈</a></nav>
+        <div class="top-actions"><span class="streak"><span class="streak-flame">✦</span> <span id="streak-count">0</span>일 연속</span><div class="avatar" aria-label="내 프로필">W</div></div>
+    </header>
+
+    <main class="page-shell">
+        <section class="welcome-row">
+            <div><p class="eyebrow">YOUR DAILY WORD ROUTINE</p><h1>안녕하세요, 오늘도 <span>한 걸음</span> 성장해요 👋</h1><p class="welcome-copy">짧게 꾸준히, 오늘의 영어 단어를 내 것으로 만들어 보세요.</p></div>
+            <div class="date-chip"><span class="date-dot"></span><span id="today-label">오늘의 학습</span></div>
+        </section>
+
+        <section class="hero-card">
+            <div class="hero-copy"><span class="pill pill-light"><span class="sparkle">✦</span> TODAY'S CHALLENGE</span><h2>오늘의 단어,<br>가볍게 시작해 볼까요?</h2><p>엄선한 영어 단어 10개로<br class="desktop-break"> 어휘력을 차근차근 쌓아 보세요.</p><a class="button button-white" href="./quiz.html">오늘의 퀴즈 시작하기 <span aria-hidden="true">→</span></a><div class="hero-meta"><span><b>10</b>개의 단어</span><i></i><span>약 <b>3분</b> 소요</span></div></div>
+            <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="book"><div class="book-spine"></div><span class="book-letter">A</span><span class="book-word">vocabulary</span><span class="book-lines"></span></div><div class="float-card float-one">✦ <span>learn</span></div><div class="float-card float-two">Aa</div><div class="art-dot dot-one"></div><div class="art-dot dot-two"></div></div>
+        </section>
+
+        <section class="section-heading"><div><p class="eyebrow">YOUR PROGRESS</p><h2>나의 학습 현황</h2></div><span class="subtle-note">매일 조금씩, 꾸준한 성장을 응원해요</span></section>
+        <section class="stats-grid" aria-label="학습 현황">
+            <article class="stat-card"><div class="stat-icon icon-violet">◷</div><div class="stat-label">오늘의 학습</div><div class="stat-value"><span id="today-progress">0</span><small> / 10 단어</small></div><div class="progress-track"><span id="progress-bar"></span></div><div class="stat-foot">오늘의 목표까지 조금만 더!</div></article>
+            <article class="stat-card"><div class="stat-icon icon-orange">✦</div><div class="stat-label">연속 학습</div><div class="stat-value"><span id="stat-streak">0</span><small> 일</small></div><div class="streak-dots"><i class="done"></i><i class="done"></i><i class="done"></i><i></i><i></i><i></i><i></i></div><div class="stat-foot">꾸준함이 실력이 되는 순간</div></article>
+            <article class="stat-card"><div class="stat-icon icon-green">✓</div><div class="stat-label">누적 정답</div><div class="stat-value"><span id="total-correct">0</span><small> 단어</small></div><div class="stat-foot">차곡차곡 쌓이는 나의 어휘력</div></article>
+        </section>
+
+        <section class="bottom-row"><div class="tip-card"><div class="tip-icon">💡</div><div><span class="eyebrow">TODAY'S TIP</span><h3>단어는 소리 내어 읽어 보세요</h3><p>직접 발음하고 문장 속에서 떠올리면 더 오래 기억할 수 있어요.</p></div><span class="tip-decoration">✳</span></div><a class="quick-link" href="./quiz.html"><span class="quick-icon">Aa</span><span><b>바로 퀴즈 풀기</b><small>지금 바로 실력을 확인해요</small></span><span class="quick-arrow">→</span></a></section>
+        <footer class="footer">작은 습관이 만드는 큰 변화 <span>·</span> <b>wQuiz</b></footer>
+    </main>
+</body>
+</html>
