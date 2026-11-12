@@ -48,6 +48,14 @@ a { color: inherit; text-decoration: none; }
 .streak { color: #6d7868; font-size: 12px; font-weight: 600; }
 .streak-flame { color: #e4a35b; }
 .avatar { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; color: var(--forest); background: #e9f0e7; font-size: 12px; font-weight: 800; }
+.profile-menu { position: relative; }
+.profile-menu .avatar { padding: 0; border: 0; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.profile-menu .avatar:focus-visible { outline: 2px solid var(--sage); outline-offset: 3px; }
+.profile-dropdown { width: 164px; position: absolute; top: calc(100% + 9px); right: 0; z-index: 10; padding: 7px; border: 1px solid var(--line); border-radius: 12px; background: white; box-shadow: 0 14px 32px #303b2f1c; opacity: 0; visibility: hidden; transform: translateY(5px); transition: opacity .16s, transform .16s, visibility .16s; }
+.profile-dropdown::before { content: ""; height: 10px; position: absolute; top: -10px; left: 0; right: 0; }
+.profile-menu:hover .profile-dropdown, .profile-menu:focus-within .profile-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+.profile-dropdown button { width: 100%; display: block; padding: 10px 11px; border: 0; border-radius: 7px; color: #465241; background: transparent; font: inherit; font-size: 12px; text-align: left; cursor: pointer; }
+.profile-dropdown button:hover, .profile-dropdown button:focus-visible { color: var(--forest); background: #f1f6ef; outline: none; }
 
 .page-shell { max-width: 1120px; margin: 0 auto; padding: 48px 24px 30px; }
 .welcome-row { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 27px; }
