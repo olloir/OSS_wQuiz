@@ -152,15 +152,40 @@ a { color: inherit; text-decoration: none; }
 .word-prompt { margin: 0; color: #858f82; font-size: 11px; }
 .question-word-area h2 { margin: 10px 0 3px; color: var(--ink); font-size: 43px; font-weight: 800; letter-spacing: -1.8px; }
 .pronunciation { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; color: #929b8e; font-size: 12px; }
+.audio-button { width: 27px; height: 27px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; color: var(--forest); background: #edf3eb; cursor: pointer; font-size: 12px; transition: transform .15s, background .15s; }
+.audio-button:hover { transform: scale(1.08); background: var(--mint); }
 .answer-options { display: grid; gap: 9px; }
-.answer-option { min-height: 49px; display: flex; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; color: #525c4f; background: white; font-size: 12px; }
+.answer-option { width: 100%; min-height: 49px; display: flex; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; color: #525c4f; background: white; font: inherit; font-size: 12px; text-align: left; cursor: pointer; transition: border-color .15s, background .15s, transform .15s; }
+.answer-option:hover:not(:disabled) { transform: translateY(-1px); border-color: var(--leaf); background: #fbfdfb; }
+.answer-option.selected { border-color: var(--forest); background: #f3f7f1; }
+.answer-option.correct { border-color: #70aa82; color: #3d7551; background: #f1f8f2; }
+.answer-option.incorrect { border-color: #d98278; color: #a94f49; background: #fff6f4; }
+.answer-option:disabled { cursor: default; }
 .option-letter { width: 25px; height: 25px; display: grid; place-items: center; flex: none; border-radius: 7px; color: #849080; background: #f2f5f0; font-size: 10px; font-weight: 700; }
+.answer-option.selected .option-letter { color: white; background: var(--forest); }
+.answer-option.correct .option-letter { color: white; background: #70aa82; }
+.answer-option.incorrect .option-letter { color: white; background: #d98278; }
 .question-card-bottom { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 17px; padding-top: 15px; border-top: 1px solid #eff2ed; }
+.answer-status { display: grid; gap: 5px; }
 .answer-note { color: #929b8e; font-size: 9px; }
 .answer-note span { padding-right: 4px; color: var(--sage); }
+.feedback-correct, .feedback-wrong { font-size: 10px; font-weight: 600; }
+.feedback-correct { color: #4d9365; }
+.feedback-wrong { color: #bd625b; }
 .button-primary { color: white; background: var(--forest); box-shadow: 0 6px 14px #5c70572b; }
 .button-primary span { font-size: 15px; }
 .button-primary:disabled { cursor: default; opacity: .48; box-shadow: none; }
+.result-card { padding: 38px 30px; border: 1px solid var(--line); border-radius: 18px; background: white; box-shadow: 0 14px 40px #303b2f0c; text-align: center; }
+.result-card[hidden] { display: none; }
+.result-icon { width: 54px; height: 54px; display: grid; place-items: center; margin: 0 auto 15px; border-radius: 17px; color: #9b8450; background: #f5f3e6; font-size: 26px; }
+.result-card .eyebrow { margin-bottom: 8px; }
+.result-card h2 { margin: 0; font-size: 24px; letter-spacing: -.7px; }
+.result-message { margin: 8px 0 18px; color: #858f82; font-size: 12px; }
+.result-score { margin-bottom: 22px; color: #929b8e; font-size: 12px; }
+.result-score strong { color: var(--forest); font-size: 40px; letter-spacing: -2px; }
+.result-actions { display: flex; justify-content: center; gap: 10px; }
+.button-secondary { color: #64705f; background: #eff3ed; }
+.quiz-error { color: #a94f49; text-align: center; }
 .quiz-encouragement { margin-top: 17px; color: #929b8e; text-align: center; font-size: 10px; }
 .quiz-encouragement span { padding-right: 5px; color: var(--sage); }
 
@@ -227,5 +252,8 @@ a { color: inherit; text-decoration: none; }
     .question-card-bottom { align-items: flex-start; }
     .answer-note { max-width: 145px; padding-top: 8px; line-height: 1.5; }
     .question-card-bottom .button { gap: 12px; font-size: 10px; }
+    .result-card { padding: 32px 20px; }
+    .result-actions { flex-direction: column; }
+    .result-actions .button { width: 100%; }
     .quiz-encouragement { font-size: 9px; }
 }
