@@ -2,6 +2,7 @@
   const QUIZ_SIZE = 10;
   const STORAGE_KEY = 'wquiz-progress';
   const words = Array.isArray(window.WQUIZ_WORDS) ? window.WQUIZ_WORDS : [];
+  const isReviewMode = new URLSearchParams(window.location.search).get('mode') === 'wrong';
   const $ = (id) => document.getElementById(id);
   const questionCard = $('question-card');
   const resultCard = $('result-card');
@@ -13,6 +14,8 @@
   let score = 0;
   let selectedMeaning = null;
   let hasAnswered = false;
+  let quizSessionActive = false;
+  let quizCompleted = false;
 
   function shuffle(items) {
     const result = [...items];
@@ -39,7 +42,7 @@
     }
   }
 
-  function saveAnswerProgress(isCorrect) {
+  function saveAnswerProgress(isCorrect, question) {
     const previous = readProgress();
     const today = localDateKey();
     const todayLearned = previous.date === today ? Number(previous.todayLearned) || 0 : 0;
@@ -52,12 +55,31 @@
       streak = lastStudyDate === localDateKey(yesterday) ? streak + 1 : 1;
     }
 
+    let wrongWords = Array.isArray(previous.wrongWords) ? previous.wrongWords : [];
+    if (isReviewMode && isCorrect) {
+      wrongWords = wrongWords.filter((item) => item.word !== question.word);
+    } else if (!isCorrect) {
+      const existingIndex = wrongWords.findIndex((item) => item.word === question.word);
+      const current = existingIndex >= 0 ? wrongWords[existingIndex] : null;
+      const wrongEntry = {
+        word: question.word,
+        pronunciation: question.pronunciation,
+        meaning: question.meaning,
+        wrongCount: (Number(current?.wrongCount) || 0) + 1,
+        lastWrongDate: today
+      };
+      wrongWords = existingIndex >= 0
+        ? wrongWords.map((item, index) => index === existingIndex ? wrongEntry : item)
+        : [...wrongWords, wrongEntry];
+    }
+
     const nextProgress = {
       date: today,
       todayLearned: Math.min(QUIZ_SIZE, todayLearned + 1),
       totalCorrect: (Number(previous.totalCorrect) || 0) + (isCorrect ? 1 : 0),
       streak,
-      lastStudyDate: today
+      lastStudyDate: today,
+      wrongWords
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProgress));
@@ -106,7 +128,7 @@
     const question = questions[questionIndex];
     const correct = selectedMeaning === question.meaning;
     if (correct) score += 1;
-    saveAnswerProgress(correct);
+    saveAnswerProgress(correct, question);
 
     answersNode.querySelectorAll('.answer-option').forEach((option) => {
       option.disabled = true;
@@ -144,26 +166,57 @@
   }
 
   function showResult() {
+    quizCompleted = true;
+    quizSessionActive = false;
     questionCard.hidden = true;
     $('current-count').textContent = String(questions.length).padStart(2, '0');
     updateQuizProgress(questions.length);
     resultCard.hidden = false;
     $('score-value').textContent = String(score);
-    $('result-message').textContent = score === questions.length
-      ? '완벽해요! 오늘의 단어를 모두 익혔어요.'
-      : score >= 7
-        ? '정말 잘했어요! 꾸준히 하면 더 많이 기억할 수 있어요.'
-        : '좋은 시작이에요. 다시 도전하면 더 익숙해질 거예요.';
+    $('score-total').textContent = String(questions.length);
+    $('result-message').textContent = isReviewMode
+      ? score === questions.length
+        ? '복습 단어를 모두 맞혔어요. 오답 목록에서 정리했어요.'
+        : '잘했어요. 아직 틀린 단어는 오답 목록에 남겨뒀어요.'
+      : score === questions.length
+        ? '완벽해요! 오늘의 단어를 모두 익혔어요.'
+        : score >= 7
+          ? '정말 잘했어요! 꾸준히 하면 더 많이 기억할 수 있어요.'
+          : '좋은 시작이에요. 다시 도전하면 더 익숙해질 거예요.';
+    $('result-title').textContent = isReviewMode ? '오답 복습 완료!' : '오늘의 퀴즈 완료!';
   }
 
   function startQuiz() {
-    if (words.length < 4) {
+    if (isReviewMode) {
+      $('quiz-title').textContent = '오답 복습';
+      $('quiz-eyebrow').textContent = 'REVIEW YOUR WORDS';
+    }
+    const savedWrongWords = readProgress().wrongWords;
+    const sourceWords = isReviewMode
+      ? words.filter((word) => Array.isArray(savedWrongWords) && savedWrongWords.some((wrong) => wrong.word === word.word))
+      : words;
+    if (isReviewMode && sourceWords.length === 0) {
+      questionCard.hidden = true;
+      resultCard.hidden = true;
+      $('quiz-topline').hidden = true;
+      $('quiz-progress').hidden = true;
+      $('quiz-encouragement').hidden = true;
+      $('review-empty-card').hidden = false;
+      return;
+    }
+    if (sourceWords.length < 4 && !isReviewMode) {
       questionCard.innerHTML = '<p class="quiz-error">퀴즈를 시작할 단어 데이터가 부족합니다.</p>';
       return;
     }
-    questions = shuffle(words).slice(0, Math.min(QUIZ_SIZE, words.length));
+    $('review-empty-card').hidden = true;
+    $('quiz-topline').hidden = false;
+    $('quiz-progress').hidden = false;
+    $('quiz-encouragement').hidden = false;
+    questions = shuffle(sourceWords).slice(0, Math.min(QUIZ_SIZE, sourceWords.length));
     questionIndex = 0;
     score = 0;
+    quizCompleted = false;
+    quizSessionActive = true;
     resultCard.hidden = true;
     questionCard.hidden = false;
     renderQuestion();
@@ -171,6 +224,20 @@
 
   nextButton.addEventListener('click', checkOrContinue);
   $('retry-button').addEventListener('click', startQuiz);
+  window.addEventListener('pagehide', () => {
+    if (!quizSessionActive || quizCompleted) return;
+    const today = localDateKey();
+    try {
+      const progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      if (progress.date === today && progress.todayLearned) {
+        progress.todayLearned = 0;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      }
+    } catch {
+      // Leave the page normally if browser storage is unavailable.
+    }
+    quizSessionActive = false;
+  });
   document.addEventListener('keydown', (event) => {
     if (resultCard.hidden === false || event.altKey || event.ctrlKey || event.metaKey) return;
     if (/^[1-4]$/.test(event.key) && !hasAnswered) {
