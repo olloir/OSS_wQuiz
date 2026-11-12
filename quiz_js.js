@@ -79,7 +79,7 @@
     $('feedback').textContent = '';
     $('feedback').className = '';
     nextButton.disabled = true;
-    nextButton.innerHTML = '정답 확인 <span>→</span>';
+    nextButton.innerHTML = '다음 단어 <span>→</span>';
     answersNode.replaceChildren();
 
     const distractors = shuffle(words.filter((word) => word.meaning !== question.meaning))
@@ -94,19 +94,38 @@
       option.setAttribute('aria-pressed', 'false');
       option.innerHTML = `<span class="option-letter">${String.fromCharCode(65 + index)}</span><span></span>`;
       option.lastElementChild.textContent = meaning;
-      option.addEventListener('click', () => {
-        if (hasAnswered) return;
-        selectedMeaning = meaning;
-        answersNode.querySelectorAll('.answer-option').forEach((button) => {
-          button.classList.remove('selected');
-          button.setAttribute('aria-pressed', 'false');
-        });
-        option.classList.add('selected');
-        option.setAttribute('aria-pressed', 'true');
-        nextButton.disabled = false;
-      });
+      option.addEventListener('click', () => revealAnswer(meaning, option));
       answersNode.append(option);
     });
+  }
+
+  function revealAnswer(meaning, selectedOption) {
+    if (hasAnswered) return;
+    selectedMeaning = meaning;
+    hasAnswered = true;
+    const question = questions[questionIndex];
+    const correct = selectedMeaning === question.meaning;
+    if (correct) score += 1;
+    saveAnswerProgress(correct);
+
+    answersNode.querySelectorAll('.answer-option').forEach((option) => {
+      option.disabled = true;
+      option.setAttribute('aria-pressed', String(option === selectedOption));
+      const optionMeaning = option.lastElementChild.textContent;
+      if (optionMeaning === question.meaning) option.classList.add('correct');
+      else if (option === selectedOption) option.classList.add('incorrect');
+    });
+
+    const feedback = $('feedback');
+    feedback.textContent = correct
+      ? '정답이에요! 잘 기억하고 있네요 ✨'
+      : `아쉬워요. 정답은 “${question.meaning}”이에요.`;
+    feedback.className = correct ? 'feedback-correct' : 'feedback-wrong';
+    nextButton.disabled = false;
+    nextButton.innerHTML = questionIndex === questions.length - 1
+      ? '결과 보기 <span>→</span>'
+      : '다음 단어 <span>→</span>';
+    updateQuizProgress(questionIndex + 1);
   }
 
   function updateQuizProgress(completed) {
@@ -118,37 +137,10 @@
   }
 
   function checkOrContinue() {
-    if (selectedMeaning === null) return;
-
-    if (hasAnswered) {
-      questionIndex += 1;
-      if (questionIndex >= questions.length) showResult();
-      else renderQuestion();
-      return;
-    }
-
-    hasAnswered = true;
-    const question = questions[questionIndex];
-    const correct = selectedMeaning === question.meaning;
-    if (correct) score += 1;
-    saveAnswerProgress(correct);
-
-    answersNode.querySelectorAll('.answer-option').forEach((option) => {
-      option.disabled = true;
-      const meaning = option.lastElementChild.textContent;
-      if (meaning === question.meaning) option.classList.add('correct');
-      else if (meaning === selectedMeaning) option.classList.add('incorrect');
-    });
-
-    const feedback = $('feedback');
-    feedback.textContent = correct
-      ? '정답이에요! 잘 기억하고 있네요 ✨'
-      : `아쉬워요. 정답은 “${question.meaning}”이에요.`;
-    feedback.classList.add(correct ? 'feedback-correct' : 'feedback-wrong');
-    nextButton.innerHTML = questionIndex === questions.length - 1
-      ? '결과 보기 <span>→</span>'
-      : '다음 단어 <span>→</span>';
-    updateQuizProgress(questionIndex + 1);
+    if (!hasAnswered) return;
+    questionIndex += 1;
+    if (questionIndex >= questions.length) showResult();
+    else renderQuestion();
   }
 
   function showResult() {
@@ -176,19 +168,6 @@
     questionCard.hidden = false;
     renderQuestion();
   }
-
-  $('audio-button').addEventListener('click', () => {
-    if (!('speechSynthesis' in window) || !questions[questionIndex]) {
-      $('feedback').textContent = '이 브라우저에서는 발음 재생을 지원하지 않아요.';
-      $('feedback').className = 'feedback-wrong';
-      return;
-    }
-    window.speechSynthesis.cancel();
-    const speech = new SpeechSynthesisUtterance(questions[questionIndex].word);
-    speech.lang = 'en-US';
-    speech.rate = 0.85;
-    window.speechSynthesis.speak(speech);
-  });
 
   nextButton.addEventListener('click', checkOrContinue);
   $('retry-button').addEventListener('click', startQuiz);
