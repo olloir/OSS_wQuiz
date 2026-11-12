@@ -7,26 +7,36 @@
     return `${year}-${month}-${day}`;
   };
 
-  let progress = {};
-  try {
-    progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {};
-  } catch {
-    progress = {};
+  function renderProgress() {
+    let progress = {};
+    try {
+      progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}') || {};
+    } catch {
+      progress = {};
+    }
+
+    const now = new Date();
+    const today = dateKey(now);
+    const todayStudied = progress.date === today ? Math.min(10, Number(progress.todayLearned) || 0) : 0;
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const hasActiveStreak = progress.lastStudyDate === today || progress.lastStudyDate === dateKey(yesterday);
+    const streak = hasActiveStreak ? Number(progress.streak) || 0 : 0;
+
+    document.getElementById('today-label').textContent = new Intl.DateTimeFormat('ko-KR', {
+      month: 'long', day: 'numeric', weekday: 'long'
+    }).format(now);
+    document.getElementById('today-progress').textContent = String(todayStudied);
+    document.getElementById('progress-bar').style.width = `${todayStudied * 10}%`;
+    document.getElementById('stat-streak').textContent = String(streak);
+    document.getElementById('streak-count').textContent = String(streak);
+    document.getElementById('total-correct').textContent = String(Number(progress.totalCorrect) || 0);
   }
 
-  const today = dateKey(new Date());
-  const todayStudied = progress.date === today ? Math.min(10, Number(progress.todayLearned) || 0) : 0;
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const hasActiveStreak = progress.lastStudyDate === today || progress.lastStudyDate === dateKey(yesterday);
-  const streak = hasActiveStreak ? Number(progress.streak) || 0 : 0;
-
-  document.getElementById('today-label').textContent = new Intl.DateTimeFormat('ko-KR', {
-    month: 'long', day: 'numeric', weekday: 'long'
-  }).format(new Date());
-  document.getElementById('today-progress').textContent = String(todayStudied);
-  document.getElementById('progress-bar').style.width = `${todayStudied * 10}%`;
-  document.getElementById('stat-streak').textContent = String(streak);
-  document.getElementById('streak-count').textContent = String(streak);
-  document.getElementById('total-correct').textContent = String(Number(progress.totalCorrect) || 0);
+  renderProgress();
+  window.addEventListener('pageshow', renderProgress);
+  window.addEventListener('focus', renderProgress);
+  window.addEventListener('storage', (event) => {
+    if (event.key === STORAGE_KEY || event.key === null) renderProgress();
+  });
 })();
