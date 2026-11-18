@@ -79,7 +79,8 @@
       totalCorrect: (Number(previous.totalCorrect) || 0) + (isCorrect ? 1 : 0),
       streak,
       lastStudyDate: today,
-      wrongWords
+      wrongWords,
+      importantWords: Array.isArray(previous.importantWords) ? previous.importantWords : []
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(nextProgress));
@@ -97,6 +98,7 @@
     $('total-count').textContent = String(questions.length).padStart(2, '0');
     $('question-word').textContent = question.word;
     $('word-pronunciation').textContent = question.pronunciation;
+    updateBookmarkButton(question);
     updateQuizProgress(questionIndex);
     $('feedback').textContent = '';
     $('feedback').className = '';
@@ -148,6 +150,40 @@
       ? '결과 보기 <span>→</span>'
       : '다음 단어 <span>→</span>';
     updateQuizProgress(questionIndex + 1);
+  }
+
+  function updateBookmarkButton(question) {
+    const button = $('bookmark-button');
+    const savedWords = readProgress().importantWords;
+    const isSaved = Array.isArray(savedWords) && savedWords.some((item) => item.word === question.word);
+    button.setAttribute('aria-pressed', String(isSaved));
+    button.classList.toggle('is-saved', isSaved);
+    button.innerHTML = isSaved
+      ? '<span aria-hidden="true">★</span> 저장됨'
+      : '<span aria-hidden="true">☆</span> 중요 단어 저장';
+  }
+
+  function toggleBookmark() {
+    const question = questions[questionIndex];
+    if (!question) return;
+    const progress = readProgress();
+    const savedWords = Array.isArray(progress.importantWords) ? progress.importantWords : [];
+    const existingIndex = savedWords.findIndex((item) => item.word === question.word);
+    progress.importantWords = existingIndex >= 0
+      ? savedWords.filter((item) => item.word !== question.word)
+      : [...savedWords, {
+          word: question.word,
+          pronunciation: question.pronunciation,
+          meaning: question.meaning,
+          addedAt: new Date().toISOString()
+        }];
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      updateBookmarkButton(question);
+    } catch {
+      $('feedback').textContent = '저장할 수 없어요. 브라우저 저장 공간을 확인해 주세요.';
+      $('feedback').className = 'feedback-wrong';
+    }
   }
 
   function updateQuizProgress(completed) {
@@ -222,6 +258,7 @@
     renderQuestion();
   }
 
+  $('bookmark-button').addEventListener('click', toggleBookmark);
   nextButton.addEventListener('click', checkOrContinue);
   $('retry-button').addEventListener('click', startQuiz);
   window.addEventListener('pagehide', () => {

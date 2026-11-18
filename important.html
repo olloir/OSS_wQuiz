@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f7faf6">
+    <title>중요단어 — wQuiz</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="./main.html" aria-label="wQuiz 홈"><span class="brand-mark">w</span><span>wQuiz</span></a>
+        <nav class="top-nav" aria-label="주 메뉴">
+            <a class="nav-link" href="./main.html">학습 홈</a>
+            <a class="nav-link" href="./quiz.html">단어 퀴즈</a>
+            <a class="nav-link" href="./review.html">오답 목록</a>
+        </nav>
+        <div class="top-actions">
+            <a class="quiz-home-link" href="./main.html"><span aria-hidden="true">←</span> 홈으로</a>
+            <div class="profile-menu">
+                <button class="avatar" type="button" aria-label="내 프로필 메뉴 열기" aria-haspopup="menu"><img class="avatar-image" src="./assets/profile-avatar.png" alt=""></button>
+                <div class="profile-dropdown" role="menu" aria-label="내 프로필 메뉴">
+                    <button type="button" role="menuitem">마이페이지</button>
+                    <a href="./important.html" role="menuitem" aria-current="page">중요단어</a>
+                    <button type="button" role="menuitem">설정</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="review-shell">
+        <section class="review-heading">
+            <div>
+                <p class="eyebrow">YOUR SAVED WORDS</p>
+                <h1>중요단어</h1>
+                <p class="review-intro">기억하고 싶은 단어를 모아두고 언제든 다시 확인해요.</p>
+            </div>
+            <a class="button button-primary" href="./quiz.html">퀴즈 풀기 <span>→</span></a>
+        </section>
+
+        <section class="review-summary" aria-live="polite">
+            <div class="review-summary-icon">★</div>
+            <div><strong id="important-count">0</strong><span>개의 단어를 저장했어요</span></div>
+            <span class="review-summary-caption">퀴즈에서 별표를 눌러 단어를 저장하세요</span>
+        </section>
+
+        <section class="important-list" id="important-list" aria-label="저장한 중요 단어 목록"></section>
+        <section class="review-empty-card" id="important-empty" hidden>
+            <div class="result-icon" aria-hidden="true">☆</div>
+            <p class="eyebrow">SAVE YOUR WORDS</p>
+            <h2>아직 저장한 단어가 없어요</h2>
+            <p class="result-message">퀴즈 화면에서 ‘중요 단어 저장’을 눌러 단어를 모아보세요.</p>
+            <a class="button button-primary" href="./quiz.html">퀴즈 시작하기 <span>→</span></a>
+        </section>
+
+        <a class="review-back-link" href="./main.html">← 학습 홈으로 돌아가기</a>
+    </main>
+    <script src="./important_js.js"></script>
+</body>
+</html>
